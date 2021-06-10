@@ -30,13 +30,17 @@
             <id>Jitpack</id>
             <url>https://jitpack.io</url>
         </repository>
+        <repository>
+            <id>Minestom</id>
+            <url>https://repo.minestom.com/repository/maven-public/</url>
+        </repository>
     </repositories>
 
     <dependencies>
         <dependency>
             <groupId>com.github.Minestom</groupId>
             <artifactId>Minestom</artifactId>
-            <version>5d8ed50</version>
+            <version>ad7b01f</version>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>
@@ -44,6 +48,36 @@
                     <artifactId>shrinkwrap-resolver-depchain</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <!-- Configuration -->
+        <dependency>
+            <groupId>com.electronwill.night-config</groupId>
+            <artifactId>core</artifactId>
+            <version>3.6.3</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.electronwill.night-config</groupId>
+            <artifactId>toml</artifactId>
+            <version>3.6.3</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- http client -->
+        <dependency>
+            <groupId>io.github.openunirest</groupId>
+            <artifactId>open-unirest-java</artifactId>
+            <version>3.3.06</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.10.3</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-paranamer</artifactId>
+            <version>2.10.3</version>
         </dependency>
     </dependencies>
 
@@ -62,7 +96,7 @@
                         <configuration>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>Main</mainClass>
+                                    <mainClass>com.github.offby0point5.minestom.PreServerStart</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
