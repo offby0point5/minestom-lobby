@@ -2,7 +2,6 @@ package com.github.offby0point5.minestom.server.lobby;
 
 import com.github.offby0point5.minestom.command.StopCommand;
 import com.github.offby0point5.minestom.config.Config;
-import com.github.offby0point5.minestom.proxy.ProxyConnector;
 import net.kyori.adventure.text.Component;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.entity.GameMode;
@@ -65,12 +64,10 @@ public class Server {
                 MinecraftServer.getNettyServer().getServerChannel().localAddress();
         MinecraftServer.LOGGER.info(String.format("Server listens to %s:%d.",
                 socketAddress.getHostName(), socketAddress.getPort()));
-
-        ProxyConnector.setup();  // Assures that the proxy knows about this server
     }
 
-    public static void stop() {
-        ProxyConnector.stop();
+    public static void stoppedByCommand() {
+        MinecraftServer.LOGGER.info("Server shutdown.");
     }
 
     private static void registerEvents() { // todo use the new tree based events
@@ -103,7 +100,7 @@ public class Server {
         itemEventNode.addListener(ItemDropEvent.class, event -> event.setCancelled(true));
         playerEventNode.addListener(PlayerUseItemEvent.class, event -> event.setCancelled(true));
 
-        // Reset players to spawn if the fall into the void
+        // Reset players to spawn if they fall into the void
         entityEventNode.addListener(EntityDamageEvent.class, event -> {
             if (event.getDamageType() == DamageType.VOID && event.getEntity() instanceof Player) {
                 Player player = (Player) event.getEntity();

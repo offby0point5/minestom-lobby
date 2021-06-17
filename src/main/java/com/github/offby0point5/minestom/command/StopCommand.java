@@ -22,7 +22,7 @@ public final class StopCommand extends Command implements CommandExecutor {
 
     @Override
     public void apply(@NotNull final CommandSender sender, @NotNull final CommandContext context) {
-        Server.stop();
+        Server.stoppedByCommand();
         MinecraftServer.stopCleanly();
     }
 
