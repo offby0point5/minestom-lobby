@@ -41,7 +41,11 @@ public class ProxyConnector {
     }
 
     public static void stop() {
-        ProxyApi.deleteServer(Config.getServerName());
+        try {
+            ProxyApi.deleteServer(Config.getServerName());
+        } catch (UnirestException e) {
+            MinecraftServer.LOGGER.warn("Remove from proxy failed", e.getCause());
+        }
         task.cancel();
     }
 }

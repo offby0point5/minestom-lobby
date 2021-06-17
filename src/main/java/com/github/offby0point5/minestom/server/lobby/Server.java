@@ -9,16 +9,19 @@ import net.minestom.server.entity.GameMode;
 import net.minestom.server.entity.Player;
 import net.minestom.server.entity.damage.DamageType;
 import net.minestom.server.entity.fakeplayer.FakePlayer;
-import net.minestom.server.event.GlobalEventHandler;
+import net.minestom.server.event.Event;
+import net.minestom.server.event.EventFilter;
+import net.minestom.server.event.EventNode;
 import net.minestom.server.event.entity.EntityDamageEvent;
 import net.minestom.server.event.item.ItemDropEvent;
 import net.minestom.server.event.player.*;
+import net.minestom.server.event.trait.EntityEvent;
+import net.minestom.server.event.trait.ItemEvent;
+import net.minestom.server.event.trait.PlayerEvent;
 import net.minestom.server.extras.bungee.BungeeCordProxy;
 import net.minestom.server.extras.velocity.VelocityProxy;
 import net.minestom.server.instance.InstanceContainer;
 import net.minestom.server.instance.InstanceManager;
-import net.minestom.server.utils.time.TimeUnit;
-import net.minestom.server.utils.time.UpdateOption;
 import net.minestom.server.world.Difficulty;
 
 import java.net.InetSocketAddress;
@@ -54,8 +57,7 @@ public class Server {
         defaultInstance.setChunkGenerator(new WorldGen());
         defaultInstance.enableAutoChunkLoad(true);
         defaultInstance.setTimeRate(0);
-        defaultInstance.setTime(6000);
-        defaultInstance.setTimeUpdate(new UpdateOption(1, TimeUnit.TICK));  // todo what is the doDaylightCycle=false ?
+        defaultInstance.setTime(-6000);
         // ===================================================
 
         server.start(Config.getServerHost(), Config.getServerPort());
@@ -72,30 +74,37 @@ public class Server {
     }
 
     private static void registerEvents() { // todo use the new tree based events
-        GlobalEventHandler manager = MinecraftServer.getGlobalEventHandler();
-        manager.addEventCallback(PlayerLoginEvent.class, event -> {
+        EventNode<Event> manager = MinecraftServer.getGlobalEventHandler();
+        EventNode<PlayerEvent> playerEventNode = EventNode.type("player", EventFilter.PLAYER);
+        EventNode<ItemEvent> itemEventNode = EventNode.type("item", EventFilter.ITEM);
+        EventNode<EntityEvent> entityEventNode = EventNode.type("entity", EventFilter.ENTITY);
+        manager.addChild(playerEventNode);
+        manager.addChild(itemEventNode);
+        manager.addChild(entityEventNode);
+
+        playerEventNode.addListener(PlayerLoginEvent.class, event -> {
             event.setSpawningInstance(defaultInstance);
             Player player = event.getPlayer();
             player.setRespawnPoint(Config.getLobbySpawn());
             player.setGameMode(GameMode.ADVENTURE);
         });
 
-        manager.addEventCallback(PlayerDeathEvent.class, event -> {
+        playerEventNode.addListener(PlayerDeathEvent.class, event -> {
             if (event.getPlayer() instanceof FakePlayer)
                 event.setChatMessage((Component) null);
         });
 
-        manager.addEventCallback(PlayerPreEatEvent.class, event -> event.setCancelled(true));
-        manager.addEventCallback(PlayerBlockBreakEvent.class, event -> event.setCancelled(true));
-        manager.addEventCallback(PlayerBlockPlaceEvent.class, event -> event.setCancelled(true));
-        manager.addEventCallback(PlayerBlockInteractEvent.class, event -> event.setCancelled(true));
-        manager.addEventCallback(PlayerSwapItemEvent.class, event -> event.setCancelled(true));
-        manager.addEventCallback(PlayerItemAnimationEvent.class, event -> event.setCancelled(true));
-        manager.addEventCallback(ItemDropEvent.class, event -> event.setCancelled(true));
-        manager.addEventCallback(PlayerUseItemEvent.class, event -> event.setCancelled(true));
+        playerEventNode.addListener(PlayerPreEatEvent.class, event -> event.setCancelled(true));
+        playerEventNode.addListener(PlayerBlockBreakEvent.class, event -> event.setCancelled(true));
+        playerEventNode.addListener(PlayerBlockPlaceEvent.class, event -> event.setCancelled(true));
+        playerEventNode.addListener(PlayerBlockInteractEvent.class, event -> event.setCancelled(true));
+        playerEventNode.addListener(PlayerSwapItemEvent.class, event -> event.setCancelled(true));
+        playerEventNode.addListener(PlayerItemAnimationEvent.class, event -> event.setCancelled(true));
+        itemEventNode.addListener(ItemDropEvent.class, event -> event.setCancelled(true));
+        playerEventNode.addListener(PlayerUseItemEvent.class, event -> event.setCancelled(true));
 
         // Reset players to spawn if the fall into the void
-        manager.addEventCallback(EntityDamageEvent.class, event -> {
+        entityEventNode.addListener(EntityDamageEvent.class, event -> {
             if (event.getDamageType() == DamageType.VOID && event.getEntity() instanceof Player) {
                 Player player = (Player) event.getEntity();
                 player.teleport(player.getRespawnPoint());

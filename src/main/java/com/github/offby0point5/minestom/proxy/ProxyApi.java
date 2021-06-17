@@ -6,6 +6,7 @@ import com.github.offby0point5.minestom.config.Config;
 import com.github.offby0point5.minestom.proxy.data.*;
 import unirest.ObjectMapper;
 import unirest.Unirest;
+import unirest.UnirestException;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -47,11 +48,13 @@ public class ProxyApi {
                 .stream().map(element -> (String) element).collect(Collectors.toSet());
     }
 
+    @Deprecated
     public static MenuData getMenuMain() {
         return Unirest.get(Config.getProxyHttpBaseUrl()+ResourceUrls.UNIREST_MENU_MAIN)
                 .asObject(MenuData.class).getBody();
     }
 
+    @Deprecated
     public static MenuData getMenuGroup(String groupName) {
         return Unirest.get(Config.getProxyHttpBaseUrl()+ResourceUrls.UNIREST_MENU_GROUP)
                 .routeParam("id", groupName)
@@ -97,7 +100,7 @@ public class ProxyApi {
     }
 
     // DELETE requests ================================================
-    public static void deleteServer(String serverName) {
+    public static void deleteServer(String serverName) throws UnirestException {
         Unirest.delete(Config.getProxyHttpBaseUrl()+ResourceUrls.UNIREST_DELETE)
                 .routeParam("id", serverName).asEmpty();
     }
