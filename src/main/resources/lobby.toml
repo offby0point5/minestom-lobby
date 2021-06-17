@@ -1,15 +1,14 @@
 [server]
 host = "0.0.0.0"
 port = 25570
+any-port = true
+
 [proxy]
 [proxy.bungee]
 enable = false
 [proxy.velocity]
 enable = false
 secret = ""
-[proxy.http]
-port = 25564
-host = "0.0.0.0"
 
 [lobby]
 spawn = "0, 2, 0"

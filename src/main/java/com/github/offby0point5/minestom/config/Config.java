@@ -8,8 +8,7 @@ import java.io.File;
 public final class Config {
     public static final String SERVER_PORT = "server.port";
     public static final String SERVER_HOST = "server.host";
-    public static final String PROXY_HTTP_PORT = "proxy.http.port";
-    public static final String PROXY_HTTP_HOST = "proxy.http.host";
+    public static final String SERVER_ANY_PORT = "server.any-port";
     public static final String PROXY_BUNGEE_ENABLE = "proxy.bungee.enable";
     public static final String PROXY_VELOCITY_ENABLE = "proxy.velocity.enable";
     public static final String PROXY_VELOCITY_SECRET = "proxy.velocity.secret";
@@ -20,10 +19,6 @@ public final class Config {
         MinecraftServer.LOGGER.debug(String.format("Config corrected %d entries.%n", LoadConfig.load(file)));
     }
 
-    public static String getServerName() {
-        return String.format("lobby-%d", getServerPort());
-    }
-
     public static String getServerHost() {
         return LoadConfig.config.getOrElse(SERVER_HOST, "0.0.0.0");
     }
@@ -31,21 +26,10 @@ public final class Config {
     @SuppressWarnings("UnstableApiUsage") public static int getServerPort() {
         if (MinecraftServer.isStarted())
             return MinecraftServer.getNettyServer().getServerChannel().localAddress().getPort();
+        else if (LoadConfig.config.getOrElse(SERVER_ANY_PORT, false))
+            return 0;
         else
             return LoadConfig.config.getIntOrElse(SERVER_PORT, 25570);
-    }
-
-    // Proxy connection
-    public static String getProxyHttpBaseUrl() {
-        return String.format("http://%s:%d", getProxyHttpHost(), getProxyHttpPort());
-    }
-
-    public static String getProxyHttpHost() {
-        return LoadConfig.config.getOrElse(PROXY_HTTP_HOST, "localhost");
-    }
-
-    public static int getProxyHttpPort() {
-        return LoadConfig.config.getIntOrElse(PROXY_HTTP_PORT, 25564);
     }
 
     public static boolean isBungeeEnabled() {

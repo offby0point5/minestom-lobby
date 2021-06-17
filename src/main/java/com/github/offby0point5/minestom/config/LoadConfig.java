@@ -14,12 +14,11 @@ public class LoadConfig {
         configSpec = new ConfigSpec();
 
         // Server networking
-        configSpec.defineInRange(Config.SERVER_PORT, 25570, 0, 65535);
+        configSpec.defineInRange(Config.SERVER_PORT, 25570, 1000, 65535);
         configSpec.defineOfClass(Config.SERVER_HOST, "0.0.0.0", String.class);
+        configSpec.defineOfClass(Config.SERVER_ANY_PORT, false, Boolean.class);
 
         // Proxy related
-        configSpec.defineOfClass(Config.PROXY_HTTP_HOST, "localhost", String.class);
-        configSpec.defineInRange(Config.PROXY_HTTP_PORT, 25564, 1000, 65535);
         configSpec.defineOfClass(Config.PROXY_BUNGEE_ENABLE, false, Boolean.class);
         configSpec.defineOfClass(Config.PROXY_VELOCITY_ENABLE, false, Boolean.class);
         configSpec.defineOfClass(Config.PROXY_VELOCITY_SECRET, "", String.class);
