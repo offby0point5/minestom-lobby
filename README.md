@@ -1,11 +1,15 @@
 # Minestom Lobby
-At the moment his minecraft server does only work with [this](https://github.com/off-by-0point5/servermanager-paper-velocity) plugin installed on a velocity proxy (versions 1.1.5+ will work). 
+ ### Features
+- ingame world and configuration changes are not persistent
+- able to use any free port to bind
+- support for proxies bungeecord and velocity
+- stop and restart commands
 
-The server then
-- registers itself at the proxy on startup
+As this server has no other features, it is lightweight and able to start up in 3 seconds or less.
+You are still able to extend the server with minestom extensions.
 
 ### Todos
-- [ ] Implement new REST api
-- [ ] add server inventory menu using guilib
-- [ ] add server switcher menu using item frames and maps
-- [ ] Move the api to an extension
+- having readonly world
+- being able to use any free port to bind
+- support for proxies bungeecord and velocity
+- having stop and restart commands
