@@ -26,17 +26,13 @@
             <id>Jitpack</id>
             <url>https://jitpack.io</url>
         </repository>
-        <repository>
-            <id>Minestom</id>
-            <url>https://repo.minestom.com/repository/maven-public/</url>
-        </repository>
     </repositories>
 
     <dependencies>
         <dependency>
             <groupId>com.github.Minestom</groupId>
             <artifactId>Minestom</artifactId>
-            <version>a4e18b9</version>
+            <version>b51362aa74</version>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>
